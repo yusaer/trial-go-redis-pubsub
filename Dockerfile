@@ -10,11 +10,8 @@ RUN apk update && \
     apk --no-cache add tzdata
 
 WORKDIR ${ROOT}
-
 COPY . ${ROOT}
-
 EXPOSE 8080
 
 RUN go install github.com/cosmtrek/air@latest
-#CMD ["air"]
 CMD ["air", "-c", ".air.toml"]
