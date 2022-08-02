@@ -1,0 +1,31 @@
+version: "3"
+services:
+  api1:
+    build: .
+    ports:
+      - "8081:8080"
+    volumes:
+      - .:/go/src
+    tty: true
+    links:
+      - "redis:redis"
+    depends_on:
+      - redis
+  api2:
+    build: .
+    ports:
+      - "8082:8080"
+    volumes:
+      - .:/go/src
+    tty: true
+    links:
+      - "redis:redis"
+    depends_on:
+      - redis
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    restart: always
+    volumes:
+      - "./data/redis:/data"
