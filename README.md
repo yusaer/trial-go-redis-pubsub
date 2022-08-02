@@ -20,6 +20,12 @@ $ docker-compose build
 $ docker-compose up -d
 ```
 
+## Publish data
+
+```
+$ curl -X POST -H "Content-Type: application/json" -d '{"name":"yusaer", "email":"yusaer@example.com"}' localhost:8081/publish
+```
+
 ## Redis
 
 ```

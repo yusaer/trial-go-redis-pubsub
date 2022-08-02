@@ -10,7 +10,7 @@ RUN apk update && \
     apk --no-cache add tzdata
 
 WORKDIR ${ROOT}
-COPY . ${ROOT}
+COPY ./pub ${ROOT}
 EXPOSE 8080
 
 RUN go install github.com/cosmtrek/air@latest

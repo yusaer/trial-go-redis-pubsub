@@ -1,22 +1,26 @@
 version: "3"
 services:
-  api1:
-    build: .
+  pub:
+    build:
+      context: .
+      dockerfile: ./pub/Dockerfile
     ports:
       - "8081:8080"
     volumes:
-      - .:/go/src
+      - ./pub:/go/src
     tty: true
     links:
       - "redis:redis"
     depends_on:
       - redis
-  api2:
-    build: .
+  sub:
+    build:
+      context: .
+      dockerfile: ./sub/Dockerfile
     ports:
       - "8082:8080"
     volumes:
-      - .:/go/src
+      - ./sub:/go/src
     tty: true
     links:
       - "redis:redis"
