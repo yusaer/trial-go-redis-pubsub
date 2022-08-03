@@ -9,8 +9,6 @@ services:
     volumes:
       - ./pub:/go/src
     tty: true
-    links:
-      - "redis:redis"
     depends_on:
       - redis
   sub1:
@@ -22,8 +20,6 @@ services:
     volumes:
       - ./sub:/go/src
     tty: true
-    links:
-      - "redis:redis"
     depends_on:
       - redis
   sub2:
@@ -35,8 +31,6 @@ services:
     volumes:
       - ./sub:/go/src
     tty: true
-    links:
-      - "redis:redis"
     depends_on:
       - redis
   sub3:
@@ -48,8 +42,6 @@ services:
     volumes:
       - ./sub:/go/src
     tty: true
-    links:
-      - "redis:redis"
     depends_on:
       - redis
   redis:
