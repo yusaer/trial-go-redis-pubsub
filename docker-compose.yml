@@ -13,12 +13,38 @@ services:
       - "redis:redis"
     depends_on:
       - redis
-  sub:
+  sub1:
     build:
       context: .
       dockerfile: ./sub/Dockerfile
     ports:
-      - "8082:8080"
+      - "8091:8080"
+    volumes:
+      - ./sub:/go/src
+    tty: true
+    links:
+      - "redis:redis"
+    depends_on:
+      - redis
+  sub2:
+    build:
+      context: .
+      dockerfile: ./sub/Dockerfile
+    ports:
+      - "8092:8080"
+    volumes:
+      - ./sub:/go/src
+    tty: true
+    links:
+      - "redis:redis"
+    depends_on:
+      - redis
+  sub3:
+    build:
+      context: .
+      dockerfile: ./sub/Dockerfile
+    ports:
+      - "8093:8080"
     volumes:
       - ./sub:/go/src
     tty: true

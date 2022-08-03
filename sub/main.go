@@ -18,6 +18,10 @@ type User struct {
 	Email string `json:"email"`
 }
 
+type SubscribeParam struct {
+	Channels []string `json:"channels"`
+}
+
 var rdb = redis.NewClient(&redis.Options{
 	Addr:        "redis:6379",
 	Password:    "", // no password set
@@ -25,14 +29,11 @@ var rdb = redis.NewClient(&redis.Options{
 	ReadTimeout: -1, // for verification
 })
 
-const messageChannel = "send-user-data"
-
 var ctx = context.Background()
 
 func main() {
 	e.GET("/", articleIndex)
-
-	subscribe()
+	e.POST("/subscribe", subscribe)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
@@ -51,8 +52,14 @@ func articleIndex(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, Sub!")
 }
 
-func subscribe() {
-	pubsub := rdb.Subscribe(ctx, messageChannel)
+func subscribe(c echo.Context) error {
+	var param SubscribeParam
+
+	if err := c.Bind(&param); err != nil {
+		return err
+	}
+
+	pubsub := rdb.Subscribe(ctx, param.Channels...)
 	defer pubsub.Close()
 
 	if _, err := pubsub.Receive(ctx); err != nil {
@@ -62,6 +69,8 @@ func subscribe() {
 	ch := pubsub.Channel()
 
 	for msg := range ch {
+		// TODO: Unsubscribe
+
 		user := User{}
 
 		if err := json.Unmarshal([]byte(msg.Payload), &user); err != nil {
@@ -70,4 +79,6 @@ func subscribe() {
 
 		fmt.Printf("%+v\n", user)
 	}
+
+	return nil
 }

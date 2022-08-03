@@ -23,32 +23,13 @@ var rdb = redis.NewClient(&redis.Options{
 	DB:       0,  // use default DB
 })
 
-const messageChannel = "send-user-data"
+const defaultChannel = "publish-user"
 
 var ctx = context.Background()
 
 func main() {
-
 	e.GET("/", articleIndex)
-
-	e.POST("/publish", func(c echo.Context) error {
-		var user User
-
-		if err := c.Bind(&user); err != nil {
-			return err
-		}
-
-		payload, err := json.Marshal(user)
-		if err != nil {
-			return err
-		}
-
-		if err := rdb.Publish(ctx, messageChannel, payload).Err(); err != nil {
-			return nil
-		}
-
-		return nil
-	})
+	e.POST("/publish", publish)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
@@ -65,4 +46,23 @@ func createMux() *echo.Echo {
 
 func articleIndex(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, Pub!")
+}
+
+func publish(c echo.Context) error {
+	var user User
+
+	if err := c.Bind(&user); err != nil {
+		return err
+	}
+
+	payload, err := json.Marshal(user)
+	if err != nil {
+		return err
+	}
+
+	if err := rdb.Publish(ctx, defaultChannel, payload).Err(); err != nil {
+		return nil
+	}
+
+	return nil
 }
