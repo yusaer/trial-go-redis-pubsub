@@ -13,13 +13,13 @@ import (
 
 var e = createMux()
 
+type SubscribeInput struct {
+	Channels []string `json:"channels"`
+}
+
 type User struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
-}
-
-type SubscribeParam struct {
-	Channels []string `json:"channels"`
 }
 
 var rdb = redis.NewClient(&redis.Options{
@@ -53,13 +53,13 @@ func articleIndex(c echo.Context) error {
 }
 
 func subscribe(c echo.Context) error {
-	var param SubscribeParam
+	var input SubscribeInput
 
-	if err := c.Bind(&param); err != nil {
+	if err := c.Bind(&input); err != nil {
 		return err
 	}
 
-	pubsub := rdb.Subscribe(ctx, param.Channels...)
+	pubsub := rdb.Subscribe(ctx, input.Channels...)
 	defer pubsub.Close()
 
 	if _, err := pubsub.Receive(ctx); err != nil {

@@ -29,21 +29,21 @@ docker-compose logs -f
 ```
 
 Next, start each sub-server.
-The default channel name is "publish-user".
 
 ```
 # -- console1 --
-$ curl -X POST -H "Content-Type: application/json" -d '{"channels":["publish-user"]}' localhost:8091/subscribe
+$ curl -X POST -H "Content-Type: application/json" -d '{"channels":["publish-user1"]}' localhost:8091/subscribe
 # -- console2 --
-$ curl -X POST -H "Content-Type: application/json" -d '{"channels":["publish-user"]}' localhost:8092/subscribe
+$ curl -X POST -H "Content-Type: application/json" -d '{"channels":["publish-user2"]}' localhost:8092/subscribe
 # -- console3 --
-$ curl -X POST -H "Content-Type: application/json" -d '{"channels":["publish-user"]}' localhost:8093/subscribe
+# multiple designations possible.
+$ curl -X POST -H "Content-Type: application/json" -d '{"channels":["publish-user1", "publish-user2"]}' localhost:8093/subscribe
 ```
 
 Once subscribed, all that is left to do is to execute publish.
 
 ```
-$ curl -X POST -H "Content-Type: application/json" -d '{"name":"yusaer", "email":"yusaer@example.com"}' localhost:8081/publish
+$ curl -X POST -H "Content-Type: application/json" -d '{"channel": "publish-user1", "user": {"name":"yusaer", "email":"yusaer@example.com"}}' localhost:8081/publish
 ```
 
 The following message is output to the docker-compose log.

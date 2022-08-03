@@ -12,6 +12,11 @@ import (
 
 var e = createMux()
 
+type PublishInput struct {
+	Channel string `json:"channel"`
+	User    User   `json:"user"`
+}
+
 type User struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
@@ -22,8 +27,6 @@ var rdb = redis.NewClient(&redis.Options{
 	Password: "", // no password set
 	DB:       0,  // use default DB
 })
-
-const defaultChannel = "publish-user"
 
 var ctx = context.Background()
 
@@ -49,18 +52,18 @@ func articleIndex(c echo.Context) error {
 }
 
 func publish(c echo.Context) error {
-	var user User
+	var input PublishInput
 
-	if err := c.Bind(&user); err != nil {
+	if err := c.Bind(&input); err != nil {
 		return err
 	}
 
-	payload, err := json.Marshal(user)
+	payload, err := json.Marshal(input.User)
 	if err != nil {
 		return err
 	}
 
-	if err := rdb.Publish(ctx, defaultChannel, payload).Err(); err != nil {
+	if err := rdb.Publish(ctx, input.Channel, payload).Err(); err != nil {
 		return nil
 	}
 
