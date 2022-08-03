@@ -46,7 +46,8 @@ Once subscribed, all that is left to do is to execute publish.
 $ curl -X POST -H "Content-Type: application/json" -d '{"channel": "publish-user1", "user": {"name":"yusaer", "email":"yusaer@example.com"}}' localhost:8081/publish
 ```
 
-The following message is output to the docker-compose log.
+The following message is output to the docker-compose log.  
+ex. When the same channel is registered for reception on three observers
 
 ```
 trial-go-redis-pubsub-sub1-1   | {Name:yusaer Email:yusaer@example.com}
