@@ -13,5 +13,5 @@ WORKDIR ${ROOT}
 COPY ./sub ${ROOT}
 EXPOSE 8080
 
-RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/cosmtrek/air@v1.40.4
 CMD ["air", "-c", ".air.toml"]
